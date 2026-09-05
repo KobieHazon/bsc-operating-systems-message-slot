@@ -32,8 +32,8 @@ Implementation material:
 
 - C.
 - POSIX APIs where applicable.
-- `pthread` for the parallel-find assignment.
-- Linux kernel-module APIs for the message-slot assignment.
+- Linux character-device and module APIs.
+- `ioctl` channel selection and red-black-tree channel storage.
 
 ## Validate
 
@@ -43,4 +43,4 @@ make check
 
 ## Notes
 
-Full build requires a Linux kernel build tree; this macOS staging pass uses static source validation only.
+A purpose-built Debian arm64 container compiled both user-space tools with strict warnings and built a nonempty AArch64 `message_slot.ko` against Linux 6.1.0-52 headers. Loading the module and exercising its device path was not attempted because Docker Desktop uses a different LinuxKit kernel.
