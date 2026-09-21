@@ -1,5 +1,6 @@
-check:
-	python3 scripts/check_repository.py
+.PHONY: check kernel-build clean
+
+check: test-vm
 
 kernel-build:
 	$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(PWD)/src modules

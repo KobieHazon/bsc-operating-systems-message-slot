@@ -1,6 +1,6 @@
 # BSc Operating Systems - Message Slot
 
-- Course: BSc Computer Science.
+- Course: Operating Systems.
 - My implementation is kept separately from supplied exercise files.
 
 ## Contents
@@ -40,4 +40,4 @@ Docker builds the module and user programs against a matching Debian Linux kerne
 
 The module defaults to major number 240. Its `major_num=0` parameter requests a free major from Linux, avoiding conflicts with existing drivers. The ioctl command stays unchanged.
 
-The suite covers sequential device operations; it is not a concurrent-access stress test. `make check` provides the shorter source and userspace build check.
+The suite covers sequential device operations; it is not a concurrent-access stress test.
