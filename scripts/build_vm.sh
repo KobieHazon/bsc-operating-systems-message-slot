@@ -10,8 +10,12 @@ gcc -static -Wall -Wextra -I/project/src /project/tests/device_test.c -o /tmp/gu
 gcc -static /project/src/message_sender.c -o /tmp/guest/message-sender
 gcc -static /project/src/message_reader.c -o /tmp/guest/message-reader
 cp /bin/busybox /tmp/guest/bin/
-for app in sh mount insmod rmmod mknod poweroff; do ln -s /bin/busybox /tmp/guest/bin/$app; done
-cp /project/tests/vm-init.sh /tmp/guest/init
+for app in sh mount insmod rmmod mknod poweroff setsid cttyhack ls cat echo dmesg; do ln -s /bin/busybox /tmp/guest/bin/$app; done
+case "${VM_INIT:-tests/vm-init.sh}" in
+    tests/vm-init.sh|scripts/vm-init.sh) ;;
+    *) echo "Unsupported guest init script" >&2; exit 1 ;;
+esac
+cp "/project/${VM_INIT:-tests/vm-init.sh}" /tmp/guest/init
 chmod +x /tmp/guest/init
 cp /boot/vmlinuz-$kernel /output/kernel
 cd /tmp/guest
