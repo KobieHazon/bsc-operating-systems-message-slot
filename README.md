@@ -1,10 +1,7 @@
 # BSc Operating Systems - Message Slot
 
 - Course: BSc Computer Science.
-- Available copy: 2019–2020.
-- Supplied exercise material is identified separately below.
 - My implementation is kept separately from supplied exercise files.
-- Submitted ZIP wrappers and Apple resource forks were omitted.
 
 ## Contents
 
@@ -31,12 +28,16 @@ Implementation material:
 - Linux character-device and module APIs.
 - `ioctl` channel selection and red-black-tree channel storage.
 
-## Validate
+## Run the device tests
 
-```bash
-make check
+Install Docker, QEMU (`qemu-system-aarch64`), and `uv`, then run:
+
+```sh
+make test-vm
 ```
 
-## Notes
+Docker builds the module and user programs against a matching Debian Linux kernel. QEMU boots that kernel in a disposable guest without networking, host disks, or shared host folders. Inside the guest, the tests load the module, create device nodes, exercise read/write and ioctl behavior, verify channel and device isolation, run both command-line tools, and unload/reload the module. Nothing is loaded into the Mac or Docker Desktop host kernel.
 
-A purpose-built Debian arm64 container compiled both user-space tools with strict warnings and built a nonempty AArch64 `message_slot.ko` against Linux 6.1.0-52 headers. Loading the module and exercising its device path was not attempted because Docker Desktop uses a different LinuxKit kernel.
+The module defaults to major number 240. Its `major_num=0` parameter requests a free major from Linux, avoiding conflicts with existing drivers. The ioctl command stays unchanged.
+
+The suite covers sequential device operations; it is not a concurrent-access stress test. `make check` provides the shorter source and userspace build check.

@@ -11,6 +11,9 @@
 
 #include "message_slot.h"
 MODULE_LICENSE("GPL");
+static int major_num = MAJOR_NUM;
+module_param(major_num, int, 0444);
+MODULE_PARM_DESC(major_num, "Character-device major; use 0 for dynamic allocation");
 
 /*
  * The main data structure for my module:
@@ -200,10 +203,12 @@ static int __init driver_init(void) {
 	int i;
     for (i = 0; i < SLOTS_NUM; i++) 
         slots[i] = RB_ROOT;
-    if ((i = register_chrdev(MAJOR_NUM, DEVICE_RANGE_NAME, &Fops)) < 0) {
-        printk(KERN_ERR "%s registraion failed for %d\n", DEVICE_FILE_NAME, MAJOR_NUM );
+    if ((i = register_chrdev(major_num, DEVICE_RANGE_NAME, &Fops)) < 0) {
+        printk(KERN_ERR "%s registration failed for %d\n", DEVICE_FILE_NAME, major_num );
         return i;
     }
+    if (major_num == 0)
+        major_num = i;
     return 0;
 }
 
@@ -216,7 +221,7 @@ static int __init driver_init(void) {
  */
 static void __exit driver_cleanup(void) {
 	int i;
-    unregister_chrdev(MAJOR_NUM, DEVICE_RANGE_NAME);
+    unregister_chrdev(major_num, DEVICE_RANGE_NAME);
     for (i = 0; i < SLOTS_NUM; i++) 
 		if (!RB_EMPTY_ROOT(&slots[i])) 
 			free_tree(slots[i].rb_node);

@@ -7,3 +7,7 @@ kernel-build:
 clean:
 	rm -rf build
 	$(MAKE) -C /lib/modules/$(shell uname -r)/build M=$(PWD)/src clean
+
+.PHONY: test-vm
+test-vm:
+	uv run --no-project python scripts/test_vm.py
